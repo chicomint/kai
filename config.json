@@ -1,11 +1,19 @@
 {
-  "token": "-", // Bot token (used to log in your Discord bot)
-  "ai": "-", // AI key (google gemini api)
-  "logChannelId": "-", // Channel ID where the bot will send logs (e.g., message deletions)
-  "restrictedChannels_alink": "-", // Channel ID deleted messages when this channel have a link 
-  "youtube_api_key": "-", // YouTube API key 
-  "youtube_channel_id": "-", // Your YouTube Channel ID
-  "discordyoutubeChannelId": "-", //Channel ID where new YouTube videos will be sent
-  "aich": "-"  //here set your channel id for AI responds a messages
+  "token": "",
+  "ai_key": "",
+  "logChannelId": "",
+  "restrictedChannels_alink": [
+    "",
+    "",
+    ""
+  ],
+  "youtube_api_key": "",
+  "youtube_channel_id": "",
+  "discordyoutubeChannelId": "",
+      "ai": "",
+  "aich": ["", ""],
+  "allowedRoles": ["", "", "", ""],
+  "terminal": ""
 }
-//Don't forget to delete comments :P
+
+
