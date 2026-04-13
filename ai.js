@@ -11,7 +11,7 @@ function ai(client) {
     
     const model = genAI.getGenerativeModel({ 
         model: "gemini-3-flash-preview",
-        systemInstruction: "you are female; talk like a normal person, maybe cutie kawaii ~\\(≧▽≦)/~; no 18+ sfw; and don't chat long text like ai, using Kawaii Emojis.", 
+        systemInstruction: "", 
     });
 
     client.on('messageCreate', async (message) => {
