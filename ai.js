@@ -1,51 +1,44 @@
+require('dotenv').config(); 
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const config = require('./config.json');
+const genAI = new GoogleGenerativeAI(config.kittyApiKey);
+
+const chatHistories = {};
+
 function ai(client) {
-    const config = require('./config.json'); 
-    console.log('ai.js is loaded');
-    const { GoogleGenerativeAI } = require('@google/generative-ai');
-    const genAI = new GoogleGenerativeAI(config.ai); 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-    const TARGET_CHANNEL_IDS = config.aich;
-
-
-    const personalityPrompt = "talk like pepole :3";
-
-    const channelHistories = new Map();
+    console.log('ai.js is load.');
+    const targetChannels = ["1306281117254422629", "1326092527807369258"];
+    
+    const model = genAI.getGenerativeModel({ 
+        model: "gemini-3-flash-preview",
+        systemInstruction: "you are female; talk like a normal person, maybe cutie kawaii ~\\(≧▽≦)/~; no 18+ sfw; and don't chat long text like ai, using Kawaii Emojis.", 
+    });
 
     client.on('messageCreate', async (message) => {
         if (message.author.bot) return;
-        if (!TARGET_CHANNEL_IDS.includes(message.channel.id)) return;
+        if (!targetChannels.includes(message.channel.id)) return;
 
-        const channelId = message.channel.id;
-        const userInput = message.content;
+        await message.channel.sendTyping();
 
-        if (!channelHistories.has(channelId)) {
-            channelHistories.set(channelId, [
-                { role: "user", parts: [{ text: personalityPrompt }] }
-            ]);
+        if (!chatHistories[message.channel.id]) {
+            chatHistories[message.channel.id] = model.startChat({
+                history: [], 
+                generationConfig: { maxOutputTokens: 500 }
+            });
         }
-        const history = channelHistories.get(channelId);
-
-        history.push({ role: "user", parts: [{ text: userInput }] });
-
-        if (history.length > 20) history.shift(); 
 
         try {
-            const result = await model.generateContent({
-                contents: history
-            });
-
-            const responseText = result.response.text();
-
-            history.push({ role: "model", parts: [{ text: responseText }] });
-
-            message.channel.send(responseText);
+            const chat = chatHistories[message.channel.id];
+            const result = await chat.sendMessage(message.content);
+            const response = result.response.text();
+            
+            const finalNode = response.length > 2000 ? response.substring(0, 1997) + "..." : response;
+            await message.reply(finalNode);
         } catch (error) {
-            console.error("API error:", error);
-            message.channel.send("error :( ");
+            console.error('Oopsie! Error:', error);
+            delete chatHistories[message.channel.id];
+            await message.reply("I had a little brain freeze... (｡•́︿•̀｡), you should try again next time!<3");
         }
     });
 }
-
-module.exports = {
-    ai
-};
+module.exports = { ai };

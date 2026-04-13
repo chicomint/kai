@@ -15,12 +15,18 @@ const client = new Client({
 });
 client.on("ready", () => {
   console.log(`${client.user.tag} is online!`);
-  //you can set activity-type here!
-   client.user.setPresence({
-    activities: [{ name: 'be back', type: 0 }],
-    status: 'online',
-  });
-});
+    client.user.setPresence({
+      activities: [
+        {
+          name: `PLS...STOP PLAY CHICKEN MEME That was not fun.`,
+          type: 0,
+        },
+      ],
+      status: "online",
+    });
+  }
+);
+
 
 const command = require('./command.js');
 const role = require('./role.js');
